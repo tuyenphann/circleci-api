@@ -153,7 +153,8 @@ commands:
             curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
             tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
             ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
-            cat /home/circleci/.bashrc
+            if [ -f '/home/circleci/project/functions/google-cloud-sdk/path.bash.inc' ]; then . '/home/circleci/project/functions/google-cloud-sdk/path.bash.inc'; fi
+            if [ -f '/home/circleci/project/functions/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/functions/google-cloud-sdk/completion.bash.inc'; fi
 
             echo "🔥 Installing Firebase Tools"
             npm install --prefix=$HOME/.local --global firebase-tools
