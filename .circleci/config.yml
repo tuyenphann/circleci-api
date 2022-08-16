@@ -152,8 +152,7 @@ commands:
             echo "🔥 Installing the gcloud CLI"
             curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
             tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
-            ./google-cloud-sdk/install.sh
-            yes
+            ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
             ./google-cloud-sdk/bin/gcloud init
 
             echo "🔥 Deploying GCloud App Engine"
@@ -264,14 +263,6 @@ workflows:
   test1:
     jobs:
       - deploy-test1:
-          context: slack-secrets
-          filters:
-            branches:
-              only:
-                - main
-  test2:
-    jobs:
-      - deploy-test2:
           context: slack-secrets
           filters:
             branches:
