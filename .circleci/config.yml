@@ -152,7 +152,8 @@ commands:
             echo "🔥 Installing the gcloud CLI"
             curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
             tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
-            ./google-cloud-sdk/install.sh
+            ./google-cloud-sdk/install.sh -y
+            ./google-cloud-sdk/bin/gcloud init
 
             echo "🔥 Deploying GCloud App Engine"
             gcloud app deploy --quiet --project=<< parameters.env >>
