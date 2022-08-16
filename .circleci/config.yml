@@ -82,9 +82,8 @@ commands:
             HAS_MIGRATION=$(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ~/project/circleci-api/functions/db/migrations)
 
             if [ $HAS_MIGRATION ]; then
-              echo "🔥 Migration changes detected from << parameters.source-branch >> branch"
-              echo "🔥 Migrating..."
-              npm run knex migrate:latest
+              echo "🔥 Migrating << parameters.source-branch >> branch"
+              npm run knex -- migrate:latest
               exit 0
             else
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
@@ -149,11 +148,8 @@ commands:
             echo "🔥 Building project"
             npm run build
 
-            echo "🔥 Installing Firebase Tools"
-            npm install --prefix=$HOME/.local --global firebase-tools
-
-            echo "🔥 Deploying Firebase"
-            firebase deploy --only hosting:<< parameters.env >> --token ${FIREBASE_TOKEN}
+            echo "🔥 Deploying Google Cloud App Engine"
+            gcloud app deploy --quiet --project=<< parameters.env >>
   notify-slack:
     description: "Notify Slack"
     steps:
