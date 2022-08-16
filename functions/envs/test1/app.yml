@@ -1,0 +1,9 @@
+runtime: nodejs14
+instance_class: F4_1G
+automatic_scaling:
+  max_instances: 4
+  max_idle_instances: 3
+  min_idle_instances: 1
+  max_concurrent_requests: 20
+  max_pending_latency: 200ms
+  min_pending_latency: 50ms
