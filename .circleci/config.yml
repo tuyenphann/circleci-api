@@ -81,7 +81,7 @@ commands:
             UPSTREAM=origin/<< parameters.source-branch >>
             HAS_MIGRATION = $(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ~/project/circleci-api/functions/db/migrations)
 
-            if [ HAS_MIGRATION ]; then
+            if [ $HAS_MIGRATION ]; then
               echo "🔥 Migration changes detected from << parameters.source-branch >> branch"
               echo "🔥 Migrating..."
               npm run knex migrate:latest
@@ -166,7 +166,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":x: Build #$CIRCLE_BUILD_NUM of $CIRCLE_PROJECT_REPONAME is failed"
+                    "text": ":x: Build #$CIRCLE_BUILD_NUM of *$CIRCLE_PROJECT_REPONAME* is failed"
                   }
                 }
               ],
@@ -195,7 +195,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: Build #$CIRCLE_BUILD_NUM of $CIRCLE_PROJECT_REPONAME is successfully"
+                    "text": ":white_check_mark: Build #$CIRCLE_BUILD_NUM of *$CIRCLE_PROJECT_REPONAME* is successfully"
                   }
                 }
               ],
