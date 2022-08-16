@@ -164,6 +164,7 @@ commands:
             npm run deploy
 
             echo "🔥 Deploying GCloud App Engine"
+            gcloud auth activate-service-account --key-file=./circle-ci-api-demo-4d44b40dcc35.json
             gcloud --quiet config set project circle-ci-api-dem
             gcloud --quiet config set compute/zone us-central1-a
             gcloud app deploy --quiet --project=<< parameters.env >>

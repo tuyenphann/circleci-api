@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "circle-ci-api-demo",
+  "private_key_id": "4d44b40dcc351d2c9850b2ede378bfce7bb464b6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCol8AW38XD+9Ae\n7sPRXVUwARxPEb4zjfMf1h43L2rJw1Fx/JNi6hf9mWWCbYphuyNuL+WO5EhxecKy\naUiBGHfTHFPFlq9+u6nQRIFLXNYVk9lEMs/MSmP4KQvthSYu52W6vBdaCnEOAYhH\nK6Va1u/be4ctNNr7ici2R0IPZLPpjTbjL4LyJfEb1ed7AClhtK9wh8DDquWsTcvM\nfvO/ZRKBK6qjsEIkCjv22fIJtWXq8Obx9nOCbiIa89CtjFGzQb4locjE8TDHnnRO\n7ptJtqBs9G4pCo00lwutjodq2/lYXyQ5mAxf1llzPptAXBtJ0zNb44E79eopz3nq\n05/7I9xDAgMBAAECggEAB18gl0MB/1zfGkzsHFAYMTx7MfOmp9PBw6yZS2Y0COpq\nDz/bwQiQM4h7E/7gYI4G3B8xyprKCBwqmoWRTq5miYhS4kWBjLBhRKnE0fEzrA5N\nWCFfvtniu8u8G1XtFF6cBFQ2avRZeuovkiQxTSn2huYLmYIzPlTQL99FUNhTC8J+\nedO8+8ys6rZCYZlYm26CMq3fRelPPGyKMZra0nLmZUE8uqzgRKbWagfK4GuPPBuw\nE/W4m7NvkAvKfhTiVdJUICgpNCOUScEcN/e2WiobZdUsSioMDuIAPbFWTRytmx+y\n3df1b8gXMMG6IA3MWh6y1WhePgDRmoEGid/aD1uSkQKBgQDin6pqTgWNblo9JY3U\nhZZPa0rh2DhqmA8Iu3Vkgc/dUQLJu6LN/T/5m97T1qP2NRQdKKVmzZFyQlloJPRc\nrisDOVsWoHnm0k1lNHIOJxujxJUEmp5Ax/QXPQV9Icz4RFyJvK8cNJ6UrXUN4egz\nAzzTFOLKDA5EkqxR/dka7a5ptQKBgQC+cl92bTmEtSkFNkhOClrmMp1b5ESeLrqR\nSHOiQxZGG83GsFyFn9ULEU8h/gCxEz8P5dK3VQeD6zQKJURSAZhQK+sDjR5o/OoV\n740oxWptP1xYFe1SKHoi+1K+Y2Ue1ctk4w649kDkuCBKAjRNiBYzmXFZ4tx3GK3k\ndyNXuF0JFwKBgH2LWkr94hGRuqf5L/M19ikVFSy8LbTPfDSoNMZzK4Y9pL/BFNXs\noA5VjUHpvHdevD/TDp4+735Ox1zsa/sT+XwVwCJu0FlQ09NnFHBGtgcpliwww867\ndruQ8IN7wCMhK+qZ/qAvflJ7LUd9iLcJ6h49ic3Ik/blElVxvV4vodmpAoGBALsM\nupYmUQf2poNn/TwpD35o2AUY/gwe+T8YWfpUyduyEznCnhzgDu7/4SkRwLwqmxWS\nNJO7/9WhfUs5rxCcYGzdtcWXJPcY8RD6ZzpUK2OBh8E8SAsZllwlW++C0B6o/Uvp\ndtxTgQkjjxMhdx1vO98SJjKSjtaqdqCeIyhU+4uhAoGATUVS1ogJdlPcByateXmW\nt5gtTzKZHGh3w9OATt9T27RmnwfbYGwEPj9SjTblpoHPkRPcZbdyVqvKwFqLpLT3\nDZ02207DANyZqrKopsin95woqmYNTKAo7BjDc6MLx0nPYY8gcAVMVAJ1Fl206vsh\nnpYplwspr6x+PVGIM+9wnok=\n-----END PRIVATE KEY-----\n",
+  "client_email": "circle-ci-api-demo@appspot.gserviceaccount.com",
+  "client_id": "117670402482948384348",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/circle-ci-api-demo%40appspot.gserviceaccount.com"
+}
