@@ -140,10 +140,11 @@ commands:
             echo 'export ENV="<< parameters.env >>"' >> $BASH_ENV
 
             echo "🔥 Installing dependencies"
+            cd ./functions
             npm install
 
             echo "🔥 Configuring environment variables"
-            cp -a ./functions/envs/<< parameters.env >>/. ./functions/
+            cp -a ./envs/<< parameters.env >>/. ./
 
             echo "🔥 Building project"
             npm run build
