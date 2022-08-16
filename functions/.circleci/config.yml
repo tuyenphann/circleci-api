@@ -1,0 +1,275 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.9.3
+
+executors:
+  node14:
+    docker:
+      - image: circleci/node:14
+    working_directory: ~/project
+
+commands:
+  pull:
+    description: "Compare and pull changes"
+    parameters:
+      git-username:
+        type: string
+        default: tuyenphann
+      git-email:
+        type: string
+        default: tuyenphan@kms-technology.com
+      target-branch:
+        type: enum
+        enum: [local/test1, local/test2]
+        default: local/test1
+      source-branch:
+        type: enum
+        enum: [main, local/test1, local/test2]
+        default: main
+    steps:
+      - run:
+          name: Compare and pull changes
+          command: |
+            echo "🔥 Configuring Git"
+            git config user.name "<< parameters.git-username >>"
+            git config user.email "<< parameters.git-email >>"
+            git config pull.rebase false
+            
+            echo "🔥 Checking out to << parameters.target-branch >>"
+            git checkout << parameters.target-branch >>
+            echo 'export DEPLOYED_BRANCH="<< parameters.target-branch >>"' >> $BASH_ENV
+
+            UPSTREAM=origin/<< parameters.source-branch >>
+            LOCAL=$(git rev-parse @)
+            REMOTE=$(git rev-parse "$UPSTREAM")
+            BASE=$(git merge-base @ "$UPSTREAM")
+
+            if [ $LOCAL = $REMOTE ]; then
+              echo "🔥 << parameters.target-branch >> branch is up-to-date as compared with << parameters.source-branch >> branch"
+              exit 0
+            elif [ $REMOTE = $BASE ]; then
+              echo "🔥 << parameters.target-branch >> branch is ahead of << parameters.source-branch >> branch"
+              exit 0
+            else
+              echo "🔥 Pulling from << parameters.source-branch >>"
+              git pull --no-edit origin << parameters.source-branch >>
+
+              if [[ -z "${CHANGES}" ]]
+              then
+                echo 'export CHANGES="    🔥   << parameters.source-branch >>"' >> $BASH_ENV
+                exit 0
+              else
+                echo 'export CHANGES="${CHANGES}\n    🔥   << parameters.source-branch >>"' >> $BASH_ENV
+              fi
+            fi
+  migrate:
+    description: "Compare and migrate changes"
+    parameters:
+      target-branch:
+        type: enum
+        enum: [local/test1, local/test2]
+        default: local/test1
+      source-branch:
+        type: enum
+        enum: [main, local/test1, local/test2]
+        default: main
+    steps:
+      - run:
+          name: Compare and migrate changes
+          command: |
+            UPSTREAM=origin/<< parameters.source-branch >>
+            HAS_MIGRATION = $(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ~/project/circleci-api/functions/db/migrations)
+
+            if [ HAS_MIGRATION ]; then
+              echo "🔥 Migration changes detected from << parameters.source-branch >> branch"
+              echo "🔥 Migrating..."
+              npm run knex migrate:latest
+              exit 0
+            else
+              echo "🔥 No migration changes from << parameters.source-branch >> branch"
+              exit 0
+            fi
+  push:
+    description: "Push changes"
+    parameters:
+      git-username:
+        type: string
+        default: tuyenphann
+      git-email:
+        type: string
+        default: tuyenphan@kms-technology.com
+      target-branch:
+        type: enum
+        enum: [local/test1, local/test2]
+        default: local/test1
+    steps:
+      - run:
+          name: Push changes
+          command: |
+            if [[ -z "${CHANGES}" ]]
+            then
+              echo "🔥 No changes"
+              echo 'export CHANGES="  •  No changes"' >> $BASH_ENV
+              exit 0
+            fi
+
+            echo "🔥 Configuring Git"
+            git config user.name "<< parameters.git-username >>"
+            git config user.email "<< parameters.git-email >>"
+            git config pull.rebase false
+
+            echo "🔥 Pushing to << parameters.target-branch >>"
+            git push
+  build-and-deploy:
+    description: "Build and deploy project"
+    parameters:
+      env:
+        type: enum
+        enum: [test1, test2]
+        default: test1
+    steps:
+      - run:
+          name: Build and deploy project
+          command: |
+            if [[ -z "${CHANGES}" ]]
+            then
+              echo "🔥 No changes"
+              exit 0
+            fi
+
+            echo 'export ENV="<< parameters.env >>"' >> $BASH_ENV
+
+            echo "🔥 Installing dependencies"
+            npm install
+
+            echo "🔥 Configuring environment variables"
+            cp -a ./envs/<< parameters.env >>/. ./src/variables/
+
+            echo "🔥 Building project"
+            npm run build
+
+            echo "🔥 Installing Firebase Tools"
+            npm install --prefix=$HOME/.local --global firebase-tools
+
+            echo "🔥 Deploying Firebase"
+            firebase deploy --only hosting:<< parameters.env >> --token ${FIREBASE_TOKEN}
+  notify-slack:
+    description: "Notify Slack"
+    steps:
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":x: Build #$CIRCLE_BUILD_NUM of $CIRCLE_PROJECT_REPONAME is failed"
+                  }
+                }
+              ],
+              "attachments": [
+                {
+                  "color": "#FC100D",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "Job <$CIRCLE_BUILD_URL|$CIRCLE_JOB> is triggered by $CIRCLE_PROJECT_USERNAME\nDeployed branch: `${DEPLOYED_BRANCH}`"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          template: ${SLACK_SUCCESS_TEMPLATE}
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":white_check_mark: Build #$CIRCLE_BUILD_NUM of $CIRCLE_PROJECT_REPONAME is successfully"
+                  }
+                }
+              ],
+              "attachments": [
+                {
+                  "color": "#4BB543",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "Job <$CIRCLE_BUILD_URL|$CIRCLE_JOB> is triggered by $CIRCLE_PROJECT_USERNAME\nEnvironment: *${ENV}*\nDeployed branch: `${DEPLOYED_BRANCH}`"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "Changes:\n*${CHANGES}*"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+
+jobs:
+  deploy-test1:
+    executor: node14
+    description: "Merge and deploy test1"
+    steps:
+      - checkout
+      - pull:
+          target-branch: local/test1
+          source-branch: main
+      - migrate:
+          target-branch: local/test1
+          source-branch: main
+      - push:
+          target-branch: local/test1
+      - build-and-deploy:
+          env: test1
+      - notify-slack
+  deploy-test2:
+    executor: node14
+    description: "Merge test2"
+    steps:
+      - checkout
+      - pull:
+          target-branch: local/test2
+          source-branch: main
+      - pull:
+          target-branch: local/test2
+          source-branch: local/test1
+      - push:
+          target-branch: local/test2
+      - build-and-deploy:
+          env: test2
+      - notify-slack
+
+workflows:
+  test1:
+    jobs:
+      - deploy-test1:
+          context: slack-secrets
+          filters:
+            branches:
+              only:
+                - main
+  test2:
+    jobs:
+      - deploy-test2:
+          context: slack-secrets
+          filters:
+            branches:
+              only:
+                - main
