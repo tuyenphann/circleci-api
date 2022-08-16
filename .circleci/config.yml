@@ -154,8 +154,14 @@ commands:
             tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
             ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
 
-            echo "🔥 Deploying GCloud App Engine"
+            echo "🔥 Installing Firebase Tools"
+            npm install --prefix=$HOME/.local --global firebase-tools
+
+            echo "🔥 Deploying Firebase"
             firebase use circle-ci-api-demo
+            npm run deploy
+
+            echo "🔥 Deploying GCloud App Engine"
             gcloud config configurations activate circle-ci-api-demo
             gcloud app deploy --quiet --project=<< parameters.env >>
   notify-slack:
