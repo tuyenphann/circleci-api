@@ -105,6 +105,8 @@ commands:
 
             echo "🔥 Installing Knex"
             cd ./functions
+            ls
+            npm install knex
 
             echo "🔥 Migrating changes from << parameters.source-branch >> branch"
             npm run knex -- migrate:latest
