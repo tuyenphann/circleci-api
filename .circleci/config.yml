@@ -168,7 +168,7 @@ commands:
             gcloud --quiet config set project circle-ci-api-demo
             gcloud --quiet config set compute/zone us-central1-a
             gcloud meta list-files-for-upload
-            gcloud app deploy --quiet --appyaml=./app.yml
+            gcloud app deploy --quiet --appyaml=./app.yml --enable_watching_go_path=False
   notify-slack:
     description: "Notify Slack"
     steps:
