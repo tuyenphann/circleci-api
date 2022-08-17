@@ -167,7 +167,6 @@ commands:
             gcloud auth activate-service-account --key-file=./circle-ci-api-demo-4d44b40dcc35.json
             gcloud --quiet config set project circle-ci-api-demo
             gcloud --quiet config set compute/zone us-central1-a
-            gcloud meta list-files-for-upload
             gcloud app deploy --quiet --appyaml=./app.yml
   notify-slack:
     description: "Notify Slack"
