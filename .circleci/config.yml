@@ -89,9 +89,15 @@ commands:
               gcloud --quiet config set compute/zone us-central1-a
 
               echo "🔥 Configuring Cloud SQL Auth proxy"
+              cd /usr/local/bin
               wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
               chmod +x cloud_sql_proxy
-              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:5432&
+              
+              echo "🔥 Launching Cloud SQL Auth proxy"
+              sudo systemctl daemon-reload
+              sudo systemctl enable cloud-sql-proxy
+              sudo systemctl start cloud-sql-proxy
+              cd ~/project/
             fi
       - run:
           name: Migrate
