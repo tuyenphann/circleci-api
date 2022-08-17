@@ -7,6 +7,3 @@ automatic_scaling:
   max_concurrent_requests: 20
   max_pending_latency: 200ms
   min_pending_latency: 50ms
-handlers:
-  - url: /
-    static_dir: build
