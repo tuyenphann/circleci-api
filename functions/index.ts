@@ -1,7 +1,7 @@
 // import * as functions from 'firebase-functions';
 import express from 'express';
-import PostgresConnection from './shared-lib/helpers/postgres-connection';
 import * as uuid from 'uuid';
+import PostgresConnection from './shared-lib/helpers/postgres-connection';
 
 const app = express();
 app.use(express.json());
@@ -43,8 +43,7 @@ app.get('/get-users', async (req, res) => {
   }
 });
 
-
-const PORT = 8080;
+const PORT = Number(process.env.PORT) || 8080;
 app.listen(PORT, () => {
   console.log(`App listing on port ${PORT}`);
 });
