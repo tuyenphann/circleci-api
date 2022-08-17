@@ -48,7 +48,10 @@ commands:
             LOCAL=$(git rev-parse @)
             REMOTE=$(git rev-parse "$UPSTREAM")
             BASE=$(git merge-base @ "$UPSTREAM")
-            MIGRATIONS=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
+
+            echo "export MIGRATIONS=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)" >> $BASH_ENV
+
+            echo "🔥🔥🔥 ${MIGRATIONS}"
 
             if [ $LOCAL = $REMOTE ]; then
               echo "🔥 << parameters.target-branch >> branch is up-to-date as compared with << parameters.source-branch >> branch"
