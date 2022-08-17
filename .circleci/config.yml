@@ -99,7 +99,7 @@ commands:
             if [[ -z "${MIGRATIONS}" ]]
             then
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
-              echo 'export MIGRATIONS="  •  No migrations"' >> $BASH_ENV
+              echo 'export MIGRATIONS="No migrations"' >> $BASH_ENV
               exit 0
             fi
 
@@ -173,7 +173,7 @@ commands:
             if [[ -z "${CHANGES}" ]]
             then
               echo "🔥 No changes"
-              echo 'export CHANGES="  •  No changes"' >> $BASH_ENV
+              echo 'export CHANGES="    🔥   No changes"' >> $BASH_ENV
               exit 0
             fi
 
@@ -253,7 +253,7 @@ commands:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Job <$CIRCLE_BUILD_URL|$CIRCLE_JOB> is triggered by $CIRCLE_PROJECT_USERNAME\nEnvironment: *${ENV}*\nDeployed branch: `${DEPLOYED_BRANCH}`"
+                        "text": "Job <$CIRCLE_BUILD_URL|$CIRCLE_JOB> is triggered by $CIRCLE_PROJECT_USERNAME\nEnvironment: `${ENV}`\nDeployed branch: *${DEPLOYED_BRANCH}*"
                       }
                     },
                     {
