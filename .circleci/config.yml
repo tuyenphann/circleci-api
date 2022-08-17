@@ -10,8 +10,8 @@ executors:
     working_directory: ~/project
 
 commands:
-  pull:
-    description: "Pull"
+  pull-migrate:
+    description: "Pull and migrate"
     parameters:
       git-username:
         type: string
@@ -63,20 +63,8 @@ commands:
                 echo 'export CHANGES="${CHANGES}\n    🔥   << parameters.source-branch >>"' >> $BASH_ENV
               fi
             fi
-  migrate:
-    description: "Migrate"
-    parameters:
-      target-branch:
-        type: enum
-        enum: [local/test1, local/test2]
-        default: local/test1
-      source-branch:
-        type: enum
-        enum: [main, local/test1, local/test2]
-        default: main
-    steps:
       - run:
-          name: Compare and migrate changes
+          name: Migrate
           command: |
             UPSTREAM=origin/<< parameters.source-branch >>
             HAS_MIGRATION=$(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
@@ -252,10 +240,7 @@ jobs:
     description: "Merge and deploy test1"
     steps:
       - checkout
-      - pull:
-          target-branch: local/test1
-          source-branch: main
-      - migrate:
+      - pull-migrate:
           target-branch: local/test1
           source-branch: main
       - push:
