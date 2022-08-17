@@ -108,8 +108,6 @@ commands:
             echo "🔥 Installing Knex and PostgreSQL"
             cd ./functions
             npm install knex pg
-            sudo apt-get update
-            sudo apt-get install postgresql-client
 
             echo "🔥 Migrating changes from << parameters.source-branch >> branch"
             npm run knex -- migrate:latest
