@@ -81,6 +81,7 @@ commands:
             echo "🔥 Configuring Cloud SQL Auth proxy"
             wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
             chmod +x cloud_sql_proxy
+            sudo mkdir /cloudsql; sudo chmod 777 /cloudsql
       - run:
           name: Launch Cloud SQL Auth proxy
           background: true
@@ -92,7 +93,7 @@ commands:
             fi
 
             echo "🔥 Launching Cloud SQL Auth proxy"
-            ./cloud_sql_proxy -instances=circle-ci-api-demo:us-central1:circleci-dev=tcp:5432 -credential_file=./functions/circle-ci-api-demo-4d44b40dcc35.json
+            ./cloud_sql_proxy -dir=/cloudsql -instances=circle-ci-api-demo:us-central1:circleci-dev=tcp:5432 -credential_file=./functions/circle-ci-api-demo-4d44b40dcc35.json
       - run:
           name: Migrate
           command: |
