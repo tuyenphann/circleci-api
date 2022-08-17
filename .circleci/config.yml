@@ -166,6 +166,8 @@ commands:
             gcloud --quiet config set project circle-ci-api-demo
             gcloud --quiet config set compute/zone us-central1-a
             gcloud app deploy --quiet --appyaml=./app.yml
+
+            ls
   notify-slack:
     description: "Notify Slack"
     steps:
