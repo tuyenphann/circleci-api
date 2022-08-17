@@ -76,10 +76,32 @@ commands:
 
             if [[ -z "${MIGRATIONS}" ]]
             then
+              echo "🔥 Installing dependencies"
+              cd ./functions
+              npm install
 
+              echo "🔥 Installing gcloud CLI"
+              cd ~/project/
+              curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
+              tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
+              ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
+              if [ -f '/home/circleci/project/google-cloud-sdk/path.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/path.bash.inc'; fi
+              if [ -f '/home/circleci/project/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/completion.bash.inc'; fi
+              cd ./functions/
+
+              echo "🔥 Configuring gcloud"
+              gcloud auth activate-service-account --key-file=./circle-ci-api-demo-4d44b40dcc35.json
+              gcloud --quiet config set project circle-ci-api-demo
+              gcloud --quiet config set compute/zone us-central1-a
+
+              echo "🔥 Migrating changes from << parameters.source-branch >> branch"
+              npm run knex -- migrate:latest
+
+              cd ..
               exit 0
             else
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
+              echo 'export MIGRATIONS="  •  No migrations"' >> $BASH_ENV
               exit 0
             fi
   push:
@@ -150,7 +172,7 @@ commands:
               exit 0
             fi
 
-            echo "🔥 Installing the gcloud CLI"
+            echo "🔥 Installing gcloud CLI"
             cd ~/project/
             curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
             tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
@@ -259,8 +281,8 @@ jobs:
           source-branch: main
       - push:
           target-branch: local/test1
-      - build-deploy:
-          env: test1
+      # - build-deploy:
+      #     env: test1
       - notify-slack
   deploy-test2:
     executor: node14
