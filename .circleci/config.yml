@@ -90,8 +90,8 @@ commands:
 
               echo "🔥 Configuring Cloud SQL Auth proxy"
               cd /usr/local/bin
-              wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
-              chmod +x cloud_sql_proxy
+              sudo wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+              sudo chmod +x cloud_sql_proxy
               
               echo "🔥 Launching Cloud SQL Auth proxy"
               sudo systemctl daemon-reload
