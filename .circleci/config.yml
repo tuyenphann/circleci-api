@@ -44,7 +44,9 @@ commands:
             LOCAL=$(git rev-parse @)
             REMOTE=$(git rev-parse "$UPSTREAM")
             BASE=$(git merge-base @ "$UPSTREAM")
-            HAS_MIGRATION=$(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
+            HAS_MIGRATION=0
+            if [ $(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations) ]; then
+              HAS_MIGRATION=1
 
             if [ $LOCAL = $REMOTE ]; then
               echo "🔥 << parameters.target-branch >> branch is up-to-date as compared with << parameters.source-branch >> branch"
