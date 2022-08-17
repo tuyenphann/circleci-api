@@ -44,6 +44,8 @@ commands:
             git checkout << parameters.target-branch >>
             echo 'export DEPLOYED_BRANCH="<< parameters.target-branch >>"' >> $BASH_ENV
 
+            echo 'export ENV="<< parameters.env >>"' >> $BASH_ENV
+
             UPSTREAM=origin/<< parameters.source-branch >>
             LOCAL=$(git rev-parse @)
             REMOTE=$(git rev-parse "$UPSTREAM")
@@ -155,8 +157,6 @@ commands:
               echo "🔥 No changes"
               exit 0
             fi
-
-            echo 'export ENV="<< parameters.env >>"' >> $BASH_ENV
 
             echo "🔥 Installing dependencies"
             cd ./functions
@@ -286,8 +286,8 @@ jobs:
           source-branch: main
       - push:
           target-branch: local/test1
-      # - build-deploy:
-      #     env: test1
+      - build-deploy:
+          env: test1
       - notify-slack
   deploy-test2:
     executor: node14
