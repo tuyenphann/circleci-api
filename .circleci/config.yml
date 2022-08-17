@@ -260,7 +260,7 @@ commands:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Migrations:\n*${MIGRATIONS}*"
+                        "text": "Migrations:\n_    🔥   ${MIGRATIONS}_"
                       }
                     },
                     {
