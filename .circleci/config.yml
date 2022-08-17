@@ -77,8 +77,9 @@ commands:
               exit 0
             fi
 
+            echo "🔥🔥 ${HAS_MIGRATIONS}"
             if [ "${HAS_MIGRATIONS}" = true ]; then
-              echo "🔥 Migrating << parameters.source-branch >> branch"
+              echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
               exit 0
             else
