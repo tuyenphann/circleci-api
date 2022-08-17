@@ -47,6 +47,9 @@ commands:
 
             if [ $(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations) ]; then
               echo 'export HAS_MIGRATIONS=true' >> $BASH_ENV
+              echo "🔥🔥🔥$UPSTREAM"
+              echo "🔥🔥🔥${HAS_MIGRATIONS}"
+              echo "🔥🔥🔥$HAS_MIGRATIONS"
             fi
 
             if [ $LOCAL = $REMOTE ]; then

@@ -27,7 +27,6 @@ export async function up(knex: Knex): Promise<void> {
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT');
       table.unique(['userId', 'serviceProviderId']);
-      table.timestamp('joiningDate', { useTz: true }).notNullable();
     });
 }
 
