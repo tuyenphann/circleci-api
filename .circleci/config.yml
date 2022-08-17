@@ -85,9 +85,7 @@ commands:
               npm install knex
 
               echo "🔥 Configuring environment variables"
-              cp -a ./envs/migration-<< parameters.env >>/. ./
-
-              ls ./envs/migration-<< parameters.env >>/
+              yes | cp -a ./envs/migration-<< parameters.env >>/. ./
 
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
@@ -154,7 +152,7 @@ commands:
             npm install
 
             echo "🔥 Configuring environment variables"
-            cp -a ./functions/envs/<< parameters.env >>/. ./
+            yes | cp -a ./functions/envs/<< parameters.env >>/. ./
 
             echo "🔥 Building project"
             npm run build
