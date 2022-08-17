@@ -80,12 +80,6 @@ commands:
 
             if [[ -z "${MIGRATIONS}" ]]
             then
-              echo "🔥 Configuring environment variables"
-              cd ./functions
-              cp -a ./envs/migration-<< parameters.env >>/. ./
-              cat env.yml
-              echo ""
-
               echo "🔥 Installing Knex"
               npm install knex
 
