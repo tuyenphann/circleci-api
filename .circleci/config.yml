@@ -49,7 +49,7 @@ commands:
             REMOTE=$(git rev-parse "$UPSTREAM")
             BASE=$(git merge-base @ "$UPSTREAM")
 
-            echo "export MIGRATIONS=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)" >> $BASH_ENV
+            echo 'export MIGRATIONS="$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)"' >> $BASH_ENV
 
             echo "🔥🔥🔥 ${MIGRATIONS}"
 
@@ -95,7 +95,7 @@ commands:
               echo "🔥 Configuring Cloud SQL Auth proxy"
               wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
               chmod +x cloud_sql_proxy
-              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:3306
+              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:3306&
             fi
       - run:
           name: Migrate
