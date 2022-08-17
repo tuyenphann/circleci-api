@@ -156,7 +156,8 @@ commands:
             ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
             if [ -f '/home/circleci/project/functions/google-cloud-sdk/path.bash.inc' ]; then . '/home/circleci/project/functions/google-cloud-sdk/path.bash.inc'; fi
             if [ -f '/home/circleci/project/functions/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/functions/google-cloud-sdk/completion.bash.inc'; fi
-            cd ./circleci-api/functions/
+            ls
+            cd ~/project/circleci-api/functions/
 
             echo "🔥 Installing Firebase Tools"
             npm install --prefix=$HOME/.local --global firebase-tools
