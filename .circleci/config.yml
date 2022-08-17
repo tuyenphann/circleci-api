@@ -91,9 +91,12 @@ commands:
               echo "🔥 Configuring Cloud SQL Auth proxy"
               wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
               chmod +x cloud_sql_proxy
+              sudo mkdir /cloudsql; sudo chmod 777 /cloudsql
+              ./cloud_sql_proxy -dir=/cloudsql -instances=circle-ci-api-demo:us-central1:circleci-dev \
+                -credential_file=./functions/circle-ci-api-demo-4d44b40dcc35.json &
               
               echo "🔥 Launching Cloud SQL Auth proxy"
-              ./cloud_sql_proxy -instances=circle-ci-api-demo:us-central1:circleci-dev=tcp:5432 -dir=/cloudsql -credential_file=./functions/circle-ci-api-demo-4d44b40dcc35.json &
+
             fi
       - run:
           name: Migrate
@@ -111,7 +114,7 @@ commands:
             sudo apt-get install postgresql-client
             npm install knex pg
 
-            psql "host=127.0.0.1 port=5432 sslmode=disable dbname=circleci-test1 user=postgres password=circlecidemo"
+            psql "sslmode=disable host=/cloudsql/circle-ci-api-demo:us-central1:circleci-dev user=postgres password=circlecidemo"
 
             echo "🔥 Migrating changes from << parameters.source-branch >> branch"
             npm run knex -- migrate:latest
