@@ -88,6 +88,7 @@ commands:
               cp -a ./envs/migration-<< parameters.env >>/. ./
 
               echo "cp -a ./envs/migration-<< parameters.env >>/. ./"
+              cat env.yml
 
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
