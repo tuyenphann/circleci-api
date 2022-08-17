@@ -78,6 +78,7 @@ commands:
             then
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               cd ./functions
+              npm install knex
               npm run knex -- migrate:latest
               cd ..
               exit 0
