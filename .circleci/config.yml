@@ -91,7 +91,7 @@ commands:
               echo "🔥 Configuring Cloud SQL Auth proxy"
               wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
               chmod +x cloud_sql_proxy
-              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:3306&
+              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:5432&
             fi
       - run:
           name: Migrate
@@ -105,7 +105,7 @@ commands:
 
             echo "🔥 Installing Knex"
             cd ./functions
-            npm install
+            npm install knex
 
             echo "🔥 Migrating changes from << parameters.source-branch >> branch"
             npm run knex -- migrate:latest
