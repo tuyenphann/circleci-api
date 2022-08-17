@@ -52,9 +52,6 @@ commands:
             MIGRATION_CHANGES=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
             echo "export MIGRATIONS=${MIGRATION_CHANGES}" >> $BASH_ENV
 
-            echo "🔥🔥🔥 ${MIGRATION_CHANGES}"
-            echo "🔥🔥🔥 ${MIGRATIONS}"
-
             if [ $LOCAL = $REMOTE ]; then
               echo "🔥 << parameters.target-branch >> branch is up-to-date as compared with << parameters.source-branch >> branch"
             elif [ $REMOTE = $BASE ]; then
@@ -73,8 +70,6 @@ commands:
       - run:
           name: Configure migration
           command: |
-            echo "🔥🔥 ${MIGRATIONS}"
-
             if [[ -z "${MIGRATIONS}" ]]
             then
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
