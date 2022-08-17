@@ -80,8 +80,6 @@ commands:
               cd ./functions
               npm install knex
 
-              ls ./node_modules/.bin
-
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
 

@@ -9,7 +9,7 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "nodemon": "nodemon.cmd ./dist/index.js 0.0.0.0 8080",
-    "knex": "./node_modules/.bin/knex.cmd --knexfile ./knexfile.ts"
+    "knex": "./node_modules/.bin/knex --knexfile ./knexfile.ts"
   },
   "engines": {
     "node": "14"
