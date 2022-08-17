@@ -84,6 +84,26 @@ commands:
               cd ./functions
               npm install knex
 
+              echo "🔥 Installing gcloud CLI"
+              cd ~/project/
+              curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
+              tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
+              ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
+              if [ -f '/home/circleci/project/google-cloud-sdk/path.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/path.bash.inc'; fi
+              if [ -f '/home/circleci/project/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/completion.bash.inc'; fi
+              cd ./functions/
+
+              echo "🔥 Installing Firebase Tools"
+              npm install --prefix=$HOME/.local --global firebase-tools
+
+              echo "🔥 Deploying Firebase"
+              firebase use circle-ci-api-demo
+
+              echo "🔥 Deploying GCloud App Engine"
+              gcloud auth activate-service-account --key-file=./circle-ci-api-demo-4d44b40dcc35.json
+              gcloud --quiet config set project circle-ci-api-demo
+              gcloud --quiet config set compute/zone us-central1-a
+
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
 
