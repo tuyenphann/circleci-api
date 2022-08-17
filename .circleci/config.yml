@@ -108,13 +108,9 @@ commands:
               exit 0
             fi
 
-            echo "🔥 Installing Knex and PostgreSQL"
+            echo "🔥 Installing Knex"
             cd ./functions
-            sudo apt-get update
-            sudo apt-get install postgresql-client
-            npm install knex pg
-
-            psql "sslmode=disable host=/cloudsql/circle-ci-api-demo:us-central1:circleci-dev user=postgres password=circlecidemo"
+            npm install knex
 
             echo "🔥 Migrating changes from << parameters.source-branch >> branch"
             npm run knex -- migrate:latest
