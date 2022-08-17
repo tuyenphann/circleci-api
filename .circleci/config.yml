@@ -87,6 +87,8 @@ commands:
               echo "🔥 Configuring environment variables"
               cp -a ./envs/migration-<< parameters.env >>/. ./
 
+              ls ./envs/migration-<< parameters.env >>/
+
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
 
