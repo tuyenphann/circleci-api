@@ -167,7 +167,7 @@ commands:
             gcloud --quiet config set compute/zone us-central1-a
             gcloud app deploy --quiet --appyaml=./app.yml
 
-            ls
+            ls dist
   notify-slack:
     description: "Notify Slack"
     steps:
