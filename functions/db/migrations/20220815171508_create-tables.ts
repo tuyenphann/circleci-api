@@ -29,6 +29,7 @@ export async function up(knex: Knex): Promise<void> {
       table.unique(['userId', 'serviceProviderId']);
       table.timestamp('joiningDate', { useTz: true }).notNullable();
       table.timestamp('updatedOn', { useTz: true });
+      table.timestamp('createdOn', { useTz: true });
     });
 }
 
