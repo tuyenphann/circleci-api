@@ -11,7 +11,7 @@ executors:
 
 commands:
   pull:
-    description: "Compare and pull changes"
+    description: "Pull"
     parameters:
       git-username:
         type: string
@@ -29,7 +29,7 @@ commands:
         default: main
     steps:
       - run:
-          name: Compare and pull changes
+          name: Pull
           command: |
             echo "🔥 Configuring Git"
             git config user.name "<< parameters.git-username >>"
@@ -64,7 +64,7 @@ commands:
               fi
             fi
   migrate:
-    description: "Compare and migrate changes"
+    description: "Migrate"
     parameters:
       target-branch:
         type: enum
@@ -90,7 +90,7 @@ commands:
               exit 0
             fi
   push:
-    description: "Push changes"
+    description: "Push"
     parameters:
       git-username:
         type: string
@@ -104,7 +104,7 @@ commands:
         default: local/test1
     steps:
       - run:
-          name: Push changes
+          name: Push
           command: |
             if [[ -z "${CHANGES}" ]]
             then
@@ -120,8 +120,8 @@ commands:
 
             echo "🔥 Pushing to << parameters.target-branch >>"
             git push
-  build-and-deploy:
-    description: "Build and deploy project"
+  build-deploy:
+    description: "Build and deploy"
     parameters:
       env:
         type: enum
@@ -129,7 +129,7 @@ commands:
         default: test1
     steps:
       - run:
-          name: Build and deploy project
+          name: Build
           command: |
             if [[ -z "${CHANGES}" ]]
             then
@@ -148,6 +148,14 @@ commands:
 
             echo "🔥 Building project"
             npm run build
+      - run:
+          name: Deploy
+          command: |
+            if [[ -z "${CHANGES}" ]]
+            then
+              echo "🔥 No changes"
+              exit 0
+            fi
 
             echo "🔥 Installing the gcloud CLI"
             cd ~/project/
@@ -252,7 +260,7 @@ jobs:
           source-branch: main
       - push:
           target-branch: local/test1
-      - build-and-deploy:
+      - build-deploy:
           env: test1
       - notify-slack
   deploy-test2:
@@ -268,7 +276,7 @@ jobs:
           source-branch: local/test1
       - push:
           target-branch: local/test2
-      - build-and-deploy:
+      - build-deploy:
           env: test2
       - notify-slack
 
