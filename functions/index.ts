@@ -2,7 +2,7 @@
 import express from 'express';
 
 const app = express();
-app.get('/', (req, res) => res.status(200).send('Hey there!!!!'));
+app.get('/', (req, res) => res.status(200).send('Hello World!'));
 
 const PORT = 8080;
 app.listen(PORT, () => {
