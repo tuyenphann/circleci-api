@@ -76,10 +76,13 @@ commands:
 
             if [[ -z "${MIGRATIONS}" ]]
             then
-              echo "🔥 Migrating changes from << parameters.source-branch >> branch"
+              echo "🔥 Installing Knex"
               cd ./functions
               npm install knex
+
+              echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
+
               cd ..
               exit 0
             else
