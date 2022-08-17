@@ -89,7 +89,7 @@ commands:
               if [ -f '/home/circleci/project/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/completion.bash.inc'; fi
 
               echo "🔥 Configuring gcloud CLI"
-              gcloud auth activate-service-account --key-file=./circle-ci-api-demo-4d44b40dcc35.json
+              gcloud auth activate-service-account --key-file=./functions/circle-ci-api-demo-4d44b40dcc35.json
               gcloud --quiet config set project circle-ci-api-demo
               gcloud --quiet config set compute/zone us-central1-a
 
