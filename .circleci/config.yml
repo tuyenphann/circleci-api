@@ -80,6 +80,8 @@ commands:
               cd ./functions
               npm install knex
 
+              ls
+
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
 
@@ -178,6 +180,8 @@ commands:
             gcloud --quiet config set project circle-ci-api-demo
             gcloud --quiet config set compute/zone us-central1-a
             gcloud app deploy --quiet --appyaml=./app.yml
+
+            cd ..
   notify-slack:
     description: "Notify Slack"
     steps:
