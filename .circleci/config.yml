@@ -93,7 +93,7 @@ commands:
               chmod +x cloud_sql_proxy
               
               echo "🔥 Launching Cloud SQL Auth proxy"
-              ./cloud_sql_proxy -instances="/cloudsql/circle-ci-api-demo:us-central1:circleci-dev"=tcp:5432 &
+              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:5432 &
             fi
       - run:
           name: Migrate
@@ -105,9 +105,11 @@ commands:
               exit 0
             fi
 
-            echo "🔥 Installing Knex"
+            echo "🔥 Installing Knex and PostgreSQL"
             cd ./functions
             npm install knex pg
+            sudo apt-get update
+            sudo apt-get install postgresql-client
 
             echo "🔥 Migrating changes from << parameters.source-branch >> branch"
             npm run knex -- migrate:latest
