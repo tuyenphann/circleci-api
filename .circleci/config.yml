@@ -93,7 +93,7 @@ commands:
               chmod +x cloud_sql_proxy
               
               echo "🔥 Launching Cloud SQL Auth proxy"
-              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:5432 &
+              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:5432
             fi
       - run:
           name: Migrate
