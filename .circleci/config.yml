@@ -71,15 +71,9 @@ commands:
       - run:
           name: Configure migration
           command: |
-            if [[ -z "${CHANGES}" ]]
-            then
-              echo "🔥 No changes"
-              echo 'export CHANGES="  •  No changes"' >> $BASH_ENV
-              exit 0
-            fi
-
             if [[ -z "${MIGRATIONS}" ]]
             then
+              echo "🔥 No migration changes from << parameters.source-branch >> branch"
               exit 0
             else
               echo "🔥 Installing gcloud CLI"
@@ -138,7 +132,6 @@ commands:
             if [[ -z "${CHANGES}" ]]
             then
               echo "🔥 No changes"
-              echo 'export CHANGES="  •  No changes"' >> $BASH_ENV
               exit 0
             fi
 
@@ -183,6 +176,7 @@ commands:
             if [[ -z "${CHANGES}" ]]
             then
               echo "🔥 No changes"
+              echo 'export CHANGES="  •  No changes"' >> $BASH_ENV
               exit 0
             fi
 
@@ -208,7 +202,7 @@ commands:
             gcloud --quiet config set compute/zone us-central1-a
             gcloud app deploy --quiet --appyaml=./app.yml
 
-            cd ..
+            cd ~/project/
   notify-slack:
     description: "Notify Slack"
     steps:
