@@ -80,6 +80,15 @@ commands:
               cd ./functions
               npm install
 
+              echo "🔥 Installing the gcloud CLI"
+              cd ~/project/
+              curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
+              tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
+              ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
+              if [ -f '/home/circleci/project/google-cloud-sdk/path.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/path.bash.inc'; fi
+              if [ -f '/home/circleci/project/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/completion.bash.inc'; fi
+              cd ./functions/
+
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
 
