@@ -27,6 +27,10 @@ commands:
         type: enum
         enum: [main, local/test1, local/test2]
         default: main
+      env:
+        type: enum
+        enum: [test1, test2]
+        default: test1
     steps:
       - run:
           name: Pull
@@ -76,27 +80,12 @@ commands:
 
             if [[ -z "${MIGRATIONS}" ]]
             then
-              echo "🔥 Installing dependencies"
+              echo "🔥 Installing Knex"
               cd ./functions
-              npm install
+              npm install knex
 
-              echo "🔥 Installing Firebase Tools"
-              npm install --prefix=$HOME/.local --global firebase-tools
-              firebase use circle-ci-api-demo
-
-              echo "🔥 Installing gcloud CLI"
-              cd ~/project/
-              curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
-              tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
-              ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
-              if [ -f '/home/circleci/project/google-cloud-sdk/path.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/path.bash.inc'; fi
-              if [ -f '/home/circleci/project/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/completion.bash.inc'; fi
-              cd ./functions/
-
-              echo "🔥 Configuring gcloud"
-              gcloud auth activate-service-account --key-file=./circle-ci-api-demo-4d44b40dcc35.json
-              gcloud --quiet config set project circle-ci-api-demo
-              gcloud --quiet config set compute/zone us-central1-a
+              echo "🔥 Configuring environment variables"
+              cp -a ./envs/migration-<< parameters.env >>/. ./
 
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
@@ -163,7 +152,7 @@ commands:
             npm install
 
             echo "🔥 Configuring environment variables"
-            cp -a ./envs/<< parameters.env >>/. ./
+            cp -a ./functions/envs/<< parameters.env >>/. ./
 
             echo "🔥 Building project"
             npm run build
