@@ -15,19 +15,20 @@ export async function up(knex: Knex): Promise<void> {
       table.timestamp('createdOn', { useTz: true });
       table.timestamp('updatedOn', { useTz: true });
     })
-    .createTable('SupportWorkers', (tableBuilder) => {
-      tableBuilder.uuid('supportWorkerId').primary().unique().notNullable();
-      tableBuilder.uuid('userId').notNullable();
-      tableBuilder.foreign('userId').references('userId').inTable('Users').onDelete('RESTRICT').onUpdate('RESTRICT');
-      tableBuilder.uuid('serviceProviderId').notNullable();
-      tableBuilder
+    .createTable('SupportWorkers', (table) => {
+      table.uuid('supportWorkerId').primary().unique().notNullable();
+      table.uuid('userId').notNullable();
+      table.foreign('userId').references('userId').inTable('Users').onDelete('RESTRICT').onUpdate('RESTRICT');
+      table.uuid('serviceProviderId').notNullable();
+      table
         .foreign('serviceProviderId')
         .references('serviceProviderId')
         .inTable('ServiceProviders')
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT');
-      tableBuilder.unique(['userId', 'serviceProviderId']);
-      tableBuilder.timestamp('joiningDate', { useTz: true }).notNullable();
+      table.unique(['userId', 'serviceProviderId']);
+      table.timestamp('joiningDate', { useTz: true }).notNullable();
+      table.timestamp('updatedOn', { useTz: true });
     });
 }
 
