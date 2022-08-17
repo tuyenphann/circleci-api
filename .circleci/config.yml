@@ -77,7 +77,9 @@ commands:
             if [[ -z "${MIGRATIONS}" ]]
             then
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
+              cd ./functions
               npm run knex -- migrate:latest
+              cd ..
               exit 0
             else
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
