@@ -44,15 +44,7 @@ commands:
             LOCAL=$(git rev-parse @)
             REMOTE=$(git rev-parse "$UPSTREAM")
             BASE=$(git merge-base @ "$UPSTREAM")
-
-            if [ '$(git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)' = "1" ]; then
-              echo 'export HAS_MIGRATIONS=true' >> $BASH_ENV
-              echo "🔥🔥🔥$UPSTREAM"
-              echo "🔥🔥🔥${HAS_MIGRATIONS}"
-              echo "🔥🔥🔥$HAS_MIGRATIONS"
-            else
-              git diff --quiet "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations
-            fi
+            MIGRATIONS=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
 
             if [ $LOCAL = $REMOTE ]; then
               echo "🔥 << parameters.target-branch >> branch is up-to-date as compared with << parameters.source-branch >> branch"
@@ -82,8 +74,8 @@ commands:
               exit 0
             fi
 
-            echo "🔥🔥 ${HAS_MIGRATIONS}"
-            if [ "${HAS_MIGRATIONS}" = true ]; then
+            if [[ -z "${MIGRATIONS}" ]]
+            then
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
               exit 0
@@ -240,6 +232,13 @@ commands:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
+                        "text": "Migrations:\n*${MIGRATIONS}*"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
                         "text": "Changes:\n*${CHANGES}*"
                       }
                     }
@@ -279,12 +278,12 @@ jobs:
           env: test2
       - notify-slack
 
-# workflows:
-#   test1:
-#     jobs:
-#       - deploy-test1:
-#           context: slack-secrets
-#           filters:
-#             branches:
-#               only:
-#                 - main
+workflows:
+  test1:
+    jobs:
+      - deploy-test1:
+          context: slack-secrets
+          filters:
+            branches:
+              only:
+                - main
