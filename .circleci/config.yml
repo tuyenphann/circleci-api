@@ -75,19 +75,6 @@ commands:
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
               exit 0
             else
-              echo "🔥 Installing gcloud CLI"
-              cd ~/project/
-              curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
-              tar -xf google-cloud-cli-398.0.0-linux-x86_64.tar.gz
-              ./google-cloud-sdk/install.sh --rc-path /home/circleci/.bashrc
-              if [ -f '/home/circleci/project/google-cloud-sdk/path.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/path.bash.inc'; fi
-              if [ -f '/home/circleci/project/google-cloud-sdk/completion.bash.inc' ]; then . '/home/circleci/project/google-cloud-sdk/completion.bash.inc'; fi
-
-              echo "🔥 Configuring gcloud CLI"
-              gcloud auth activate-service-account --key-file=./functions/circle-ci-api-demo-4d44b40dcc35.json
-              gcloud --quiet config set project circle-ci-api-demo
-              gcloud --quiet config set compute/zone us-central1-a
-
               echo "🔥 Configuring Cloud SQL Auth proxy"
               wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
               chmod +x cloud_sql_proxy
@@ -103,7 +90,7 @@ commands:
             fi
 
             echo "🔥 Launching Cloud SQL Auth proxy"
-            ./cloud_sql_proxy -instances=circle-ci-api-demo:us-central1:circleci-dev=tcp:5432
+            ./cloud_sql_proxy -instances=circle-ci-api-demo:us-central1:circleci-dev=tcp:5432 -credential_file=./functions/circle-ci-api-demo-4d44b40dcc35.json
       - run:
           name: Migrate
           command: |
