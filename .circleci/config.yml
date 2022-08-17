@@ -42,14 +42,15 @@ commands:
             
             echo "🔥 Checking out to << parameters.target-branch >>"
             git checkout << parameters.target-branch >>
-            export DEPLOYED_BRANCH="<< parameters.target-branch >>"
+            echo 'export DEPLOYED_BRANCH="<< parameters.target-branch >>"' >> $BASH_ENV
 
             UPSTREAM=origin/<< parameters.source-branch >>
             LOCAL=$(git rev-parse @)
             REMOTE=$(git rev-parse "$UPSTREAM")
             BASE=$(git merge-base @ "$UPSTREAM")
 
-            export MIGRATIONS=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
+            echo 'export MIGRATIONS=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)' >> $BASH_ENV
+
             echo "🔥🔥🔥 ${MIGRATIONS}"
 
             if [ $LOCAL = $REMOTE ]; then
@@ -62,17 +63,16 @@ commands:
 
               if [[ -z "${CHANGES}" ]]
               then
-                export CHANGES="    🔥   << parameters.source-branch >>"
+                echo 'export CHANGES="    🔥   << parameters.source-branch >>"' >> $BASH_ENV
               else
-                export CHANGES="${CHANGES}\n    🔥   << parameters.source-branch >>"
+                echo 'export CHANGES="${CHANGES}\n    🔥   << parameters.source-branch >>"' >> $BASH_ENV
               fi
             fi
       - run:
           name: Configure migration
           command: |
             echo "🔥🔥 ${MIGRATIONS}"
-            echo '🔥🔥 -z "${MIGRATIONS}"'
-            
+
             if [[ -z "${MIGRATIONS}" ]]
             then
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
