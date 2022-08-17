@@ -95,7 +95,8 @@ commands:
               
               echo "🔥 Launching Cloud SQL Auth proxy"
               sudo cp -a ~/project/functions/envs/migration-<< parameters.env >>/. /etc/systemd/system/.
-              sudo apt install systemd
+              sudo apt-get update
+              sudo apt-get -y install systemd
               sudo systemctl daemon-reload
               sudo systemctl enable cloud-sql-proxy
               sudo systemctl start cloud-sql-proxy
