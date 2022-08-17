@@ -68,8 +68,7 @@ commands:
               fi
             fi
       - run:
-          name: Configure migration
-          background: true
+          name: Configure gcloud CLI and SQL Auth proxy
           command: |
             if [[ -z "${MIGRATIONS}" ]]
             then
@@ -92,10 +91,19 @@ commands:
               echo "🔥 Configuring Cloud SQL Auth proxy"
               wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
               chmod +x cloud_sql_proxy
-              
-              echo "🔥 Launching Cloud SQL Auth proxy"
-              ./cloud_sql_proxy -instances=circle-ci-api-demo:us-central1:circleci-dev=tcp:5432
             fi
+      - run:
+          name: Launch Cloud SQL Auth proxy
+          background: true
+          command: |
+            if [[ -z "${MIGRATIONS}" ]]
+            then
+              echo "🔥 No migration changes from << parameters.source-branch >> branch"
+              exit 0
+            fi
+
+            echo "🔥 Launching Cloud SQL Auth proxy"
+            ./cloud_sql_proxy -instances=circle-ci-api-demo:us-central1:circleci-dev=tcp:5432
       - run:
           name: Migrate
           command: |
