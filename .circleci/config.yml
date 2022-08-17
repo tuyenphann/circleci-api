@@ -104,10 +104,17 @@ commands:
               gcloud --quiet config set project circle-ci-api-demo
               gcloud --quiet config set compute/zone us-central1-a
 
+              echo "🔥 Configuring Cloud SQL Auth proxy"
+              cd ~/project/
+              wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+              chmod +x cloud_sql_proxy
+              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:3306
+              cd ./functions/
+
               echo "🔥 Migrating changes from << parameters.source-branch >> branch"
               npm run knex -- migrate:latest
 
-              cd ..
+              cd ~/project/
               exit 0
             else
               echo "🔥 No migration changes from << parameters.source-branch >> branch"
