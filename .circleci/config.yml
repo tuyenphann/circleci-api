@@ -80,6 +80,10 @@ commands:
               cd ./functions
               npm install
 
+              echo "🔥 Installing Firebase Tools"
+              npm install --prefix=$HOME/.local --global firebase-tools
+              firebase use circle-ci-api-demo
+
               echo "🔥 Installing gcloud CLI"
               cd ~/project/
               curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
