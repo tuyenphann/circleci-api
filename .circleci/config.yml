@@ -69,7 +69,7 @@ commands:
               fi
             fi
       - run:
-          name: Migrate
+          name: Configure migration
           command: |
             if [[ -z "${CHANGES}" ]]
             then
@@ -80,6 +80,10 @@ commands:
 
             if [[ -z "${MIGRATIONS}" ]]
             then
+              echo "🔥 No migration changes from << parameters.source-branch >> branch"
+              echo 'export MIGRATIONS="  •  No migrations"' >> $BASH_ENV
+              exit 0
+            else
               echo "🔥 Installing gcloud CLI"
               cd ~/project/
               curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-398.0.0-linux-x86_64.tar.gz
@@ -96,22 +100,24 @@ commands:
               echo "🔥 Configuring Cloud SQL Auth proxy"
               wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
               chmod +x cloud_sql_proxy
-              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:3306 &
-
-              echo "🔥 Installing Knex"
-              cd ./functions
-              npm install knex
-
-              echo "🔥 Migrating changes from << parameters.source-branch >> branch"
-              npm run knex -- migrate:latest
-
-              cd ~/project/
-              exit 0
-            else
-              echo "🔥 No migration changes from << parameters.source-branch >> branch"
-              echo 'export MIGRATIONS="  •  No migrations"' >> $BASH_ENV
+              ./cloud_sql_proxy -instances="circle-ci-api-demo:us-central1:circleci-dev"=tcp:3306
+            fi
+      - run:
+          name: Migrate
+          command: |
+            if [[ -z "${MIGRATIONS}" ]]
+            then
               exit 0
             fi
+
+            echo "🔥 Installing Knex"
+            cd ./functions
+            npm install knex
+
+            echo "🔥 Migrating changes from << parameters.source-branch >> branch"
+            npm run knex -- migrate:latest
+
+            cd ~/project/
   push:
     description: "Push"
     parameters:
