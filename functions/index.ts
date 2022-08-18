@@ -6,7 +6,7 @@ import PostgresConnection from './shared-lib/helpers/postgres-connection';
 const app = express();
 app.use(express.json());
 
-app.get('/', (req, res) => res.status(200).send('Hello World!'));
+app.get('/', (req, res) => res.status(200).send('Hi!'));
 
 app.post('/create-user', async (req, res) => {
   const db = PostgresConnection.Knex();
