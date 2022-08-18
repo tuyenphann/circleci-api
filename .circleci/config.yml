@@ -46,13 +46,13 @@ commands:
             BASE=$(git merge-base @ "$UPSTREAM")
 
             MIGRATION_CHANGES=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
-            if [[ -z "${MIGRATION_CHANGES}" ]]
+            if [[ ! -z "${MIGRATION_CHANGES}" ]]
             then
               if [[ -z "${MIGRATIONS}" ]]
               then
-                echo 'export MIGRATIONS="    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+                echo "export MIGRATIONS='    🔥   "$MIGRATION_CHANGES"'" >> $BASH_ENV
               else
-                echo 'export MIGRATIONS="${MIGRATIONS}\n    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+                echo "export MIGRATIONS='${MIGRATIONS}\n    🔥   "$MIGRATION_CHANGES"'" >> $BASH_ENV
               fi
             fi
 
