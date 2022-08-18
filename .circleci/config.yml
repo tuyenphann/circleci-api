@@ -53,6 +53,7 @@ commands:
                 echo 'export MIGRATIONS="    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
               else
                 echo 'export MIGRATIONS="${MIGRATIONS}\n    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+              fi
             fi
 
             if [ $LOCAL = $REMOTE ]; then
