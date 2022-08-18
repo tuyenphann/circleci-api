@@ -285,6 +285,9 @@ jobs:
       - pull-migrate:
           target-branch: local/test1
           source-branch: main
+      - pull-migrate:
+          target-branch: local/test1
+          source-branch: local/test2
       - push:
           target-branch: local/test1
       - build-deploy:
@@ -295,10 +298,10 @@ jobs:
     description: "Merge test2"
     steps:
       - checkout
-      - pull:
+      - pull-migrate:
           target-branch: local/test2
           source-branch: main
-      - pull:
+      - pull-migrate:
           target-branch: local/test2
           source-branch: local/test1
       - push:
