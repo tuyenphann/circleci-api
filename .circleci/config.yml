@@ -103,7 +103,7 @@ commands:
             if [[ -z "${MIGRATIONS}" ]]
             then
               echo "🔥 No migrations"
-              echo 'export MIGRATIONS="No migrations"' >> $BASH_ENV
+              echo 'export MIGRATIONS="    🔥   No migrations"' >> $BASH_ENV
               exit 0
             fi
 
@@ -265,14 +265,14 @@ commands:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Migrations:\n_    🔥   ${MIGRATIONS}_"
+                        "text": "Migrations:_\n${MIGRATIONS} _"
                       }
                     },
                     {
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Changes:\n*${CHANGES}*"
+                        "text": "Changes:*\n${CHANGES} *"
                       }
                     }
                   ]
