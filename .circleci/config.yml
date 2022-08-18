@@ -268,14 +268,14 @@ commands:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Migrations:\n${MIGRATIONS}"
+                        "text": "*Migrations:*\n${MIGRATIONS}"
                       }
                     },
                     {
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Changes:\n${CHANGES}"
+                        "text": "*Changes:*\n${CHANGES}"
                       }
                     }
                   ]
