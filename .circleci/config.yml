@@ -10,8 +10,8 @@ executors:
     working_directory: ~/project
 
 commands:
-  pull-migrate:
-    description: "Pull and migrate"
+  pull:
+    description: "Pull"
     parameters:
       git-username:
         type: string
@@ -27,10 +27,6 @@ commands:
         type: enum
         enum: [main, local/test1, local/test2]
         default: main
-      env:
-        type: enum
-        enum: [test1, test2]
-        default: test1
     steps:
       - run:
           name: Pull
@@ -44,15 +40,18 @@ commands:
             git checkout << parameters.target-branch >>
             echo 'export DEPLOYED_BRANCH="<< parameters.target-branch >>"' >> $BASH_ENV
 
-            echo 'export ENV="<< parameters.env >>"' >> $BASH_ENV
-
             UPSTREAM=origin/<< parameters.source-branch >>
             LOCAL=$(git rev-parse @)
             REMOTE=$(git rev-parse "$UPSTREAM")
             BASE=$(git merge-base @ "$UPSTREAM")
 
             MIGRATION_CHANGES=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
-            echo "export MIGRATIONS=${MIGRATION_CHANGES}" >> $BASH_ENV
+            if [[ -z "${MIGRATION_CHANGES}" && -z "${MIGRATIONS}" ]]
+            then
+              echo 'export MIGRATIONS="    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+            else
+              echo 'export MIGRATIONS="${MIGRATIONS}\n    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+            fi
 
             if [ $LOCAL = $REMOTE ]; then
               echo "🔥 << parameters.target-branch >> branch is up-to-date as compared with << parameters.source-branch >> branch"
@@ -69,16 +68,20 @@ commands:
                 echo 'export CHANGES="${CHANGES}\n    🔥   << parameters.source-branch >>"' >> $BASH_ENV
               fi
             fi
+  migrate:
+    description: "Migrate"
+    steps:
       - run:
           name: Configure gcloud CLI and SQL Auth proxy
           command: |
             if [[ -z "${MIGRATIONS}" ]]
             then
-              echo "🔥 No migration changes from << parameters.source-branch >> branch"
+              echo "🔥 No migrations"
               exit 0
             fi
 
             echo "🔥 Configuring Cloud SQL Auth proxy"
+            cd ~/project/
             wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
             chmod +x cloud_sql_proxy
             sudo mkdir /cloudsql; sudo chmod 777 /cloudsql
@@ -88,7 +91,7 @@ commands:
           command: |
             if [[ -z "${MIGRATIONS}" ]]
             then
-              echo "🔥 No migration changes from << parameters.source-branch >> branch"
+              echo "🔥 No migrations"
               exit 0
             fi
 
@@ -99,7 +102,7 @@ commands:
           command: |
             if [[ -z "${MIGRATIONS}" ]]
             then
-              echo "🔥 No migration changes from << parameters.source-branch >> branch"
+              echo "🔥 No migrations"
               echo 'export MIGRATIONS="No migrations"' >> $BASH_ENV
               exit 0
             fi
@@ -108,7 +111,7 @@ commands:
             cd ./functions
             npm install knex
 
-            echo "🔥 Migrating changes from << parameters.source-branch >> branch"
+            echo "🔥 Migrating changes"
             npm run knex -- migrate:latest
 
             cd ~/project/
@@ -165,6 +168,7 @@ commands:
 
             echo "🔥 Configuring environment variables"
             cp -a ./envs/<< parameters.env >>/. ./
+            echo 'export ENV="<< parameters.env >>"' >> $BASH_ENV
 
             echo "🔥 Building project"
             npm run build
@@ -282,12 +286,13 @@ jobs:
     description: "Merge and deploy test1"
     steps:
       - checkout
-      - pull-migrate:
+      - pull:
           target-branch: local/test1
           source-branch: main
-      - pull-migrate:
+      - pull:
           target-branch: local/test1
           source-branch: local/test2
+      - migrate
       - push:
           target-branch: local/test1
       - build-deploy:
@@ -298,12 +303,13 @@ jobs:
     description: "Merge test2"
     steps:
       - checkout
-      - pull-migrate:
+      - pull:
           target-branch: local/test2
           source-branch: main
-      - pull-migrate:
+      - pull:
           target-branch: local/test2
           source-branch: local/test1
+      - migrate
       - push:
           target-branch: local/test2
       - build-deploy:
