@@ -46,7 +46,7 @@ commands:
             BASE=$(git merge-base @ "$UPSTREAM")
 
             MIGRATION_CHANGES=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
-            if [[ -z "${MIGRATION_CHANGES}" ]]
+            if [[ ! -z "${MIGRATION_CHANGES}" ]]
             then
               if [[ -z "${MIGRATIONS}" ]]
               then
