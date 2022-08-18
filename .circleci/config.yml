@@ -46,11 +46,14 @@ commands:
             BASE=$(git merge-base @ "$UPSTREAM")
 
             MIGRATION_CHANGES=$(git diff --name-only "$UPSTREAM" << parameters.target-branch >> -- ./functions/db/migrations)
-            if [[ -z "${MIGRATION_CHANGES}" && -z "${MIGRATIONS}" ]]
+            if [[ -z "${MIGRATION_CHANGES}" ]]
             then
-              echo 'export MIGRATIONS="    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
-            else
-              echo 'export MIGRATIONS="${MIGRATIONS}\n    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+              if [[ -z "${MIGRATIONS}" ]]
+              then
+                echo 'export MIGRATIONS="    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+              else
+                echo 'export MIGRATIONS="${MIGRATIONS}\n    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+              fi
             fi
 
             if [ $LOCAL = $REMOTE ]; then
@@ -265,14 +268,14 @@ commands:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Migrations:_\n${MIGRATIONS} _"
+                        "text": "Migrations:\n${MIGRATIONS}"
                       }
                     },
                     {
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "Changes:*\n${CHANGES} *"
+                        "text": "Changes:\n${CHANGES}"
                       }
                     }
                   ]
