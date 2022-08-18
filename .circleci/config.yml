@@ -50,9 +50,9 @@ commands:
             then
               if [[ -z "${MIGRATIONS}" ]]
               then
-                echo 'export MIGRATIONS="    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+                echo 'export MIGRATIONS="    🔥   $MIGRATION_CHANGES"' >> $BASH_ENV
               else
-                echo 'export MIGRATIONS="${MIGRATIONS}\n    🔥   ${MIGRATION_CHANGES}"' >> $BASH_ENV
+                echo 'export MIGRATIONS="${MIGRATIONS}\n    🔥   $MIGRATION_CHANGES"' >> $BASH_ENV
               fi
             fi
 
